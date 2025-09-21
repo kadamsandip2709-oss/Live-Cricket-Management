@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Matches - Live Cricket Score{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary fw-bold">🏏 Matches</h2>
+
+  <!-- Schedule New Match -->
+  <div class="card shadow-sm p-4 mb-4">
+    <h5 class="mb-3">Schedule a New Match</h5>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Schedule Match</button>
+    </form>
+  </div>
+
+  <!-- Matches List -->
+  {% if matches %}
+    <div class="row g-3">
+      {% for match in matches %}
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-4">
+          <div class="card-body">
+            <h5 class="fw-bold">{{ match.team1.name }} 🆚 {{ match.team2.name }}</h5>
+            <p class="text-muted">Date: {{ match.date|date:"M d, Y H:i" }}</p>
+
+            <div class="mb-2">
+              <strong>{{ match.team1.name }}</strong>: 
+              {{ match.team1_runs }}/{{ match.team1_wickets }} ({{ match.team1_overs }} overs)
+            </div>
+            <div class="mb-2">
+              <strong>{{ match.team2.name }}</strong>: 
+              {{ match.team2_runs }}/{{ match.team2_wickets }} ({{ match.team2_overs }} overs)
+            </div>
+
+            {% if match.winner %}
+              <p class="fw-semibold text-success">🏆 Winner: {{ match.winner.name }}</p>
+            {% else %}
+              <p class="text-danger">Winner not decided yet (maybe a draw)</p>
+            {% endif %}
+
+            <a href="{% url 'update_score' match.id %}" class="btn btn-sm btn-outline-primary">Update Score</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No matches scheduled yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

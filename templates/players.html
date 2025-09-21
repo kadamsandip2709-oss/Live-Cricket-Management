@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Players - Live Cricket Score{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-primary fw-bold">👥 All Players</h2>
+
+  {% if players %}
+    <div class="row g-4">
+      {% for player in players %}
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+          <div class="card-body">
+            <!-- Player info -->
+            <h5 class="fw-bold mb-1">{{ player.name }}</h5>
+            <p class="text-muted mb-2">#{{ player.number }} | {{ player.player_type|title }}</p>
+
+            <!-- Team info -->
+            <p class="mb-3">
+              🏏 Team:
+              <span class="fw-semibold text-success">{{ player.team.name }}</span>
+            </p>
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-between">
+              <a href="{% url 'edit_player' player.id %}" class="btn btn-sm btn-outline-warning">✏️ Edit</a>
+              <a href="{% url 'delete_player' player.id %}" class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('Delete this player?');">🗑 Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">No players have been added yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

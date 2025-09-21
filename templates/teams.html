@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Teams - Live Cricket Score{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">🏏 All Teams</h2>
+    <a href="{% url 'home' %}" class="btn btn-success">+ Create New Team</a>
+  </div>
+
+  {% if teams %}
+    <div class="row g-4">
+      {% for team in teams %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0 rounded-3 h-100">
+          <div class="card-body d-flex flex-column">
+            <h4 class="card-title text-primary fw-bold">{{ team.name }}</h4>
+            <p class="text-muted mb-2">
+              <strong>Players:</strong> {{ team.players.count }} <br>
+              <strong>Overs:</strong> {{ team.overs }} <br>
+              <strong>Wickets:</strong> {{ team.wickets }}
+            </p>
+
+            <div class="mt-auto">
+              <div class="btn-group w-100">
+                <a href="{% url 'add_player' team.id %}" class="btn btn-sm btn-outline-primary">➕ Player</a>
+                <a href="{% url 'edit_team' team.id %}" class="btn btn-sm btn-outline-warning">✏️ Edit</a>
+                <a href="{% url 'delete_team' team.id %}" class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Are you sure you want to delete this team?');">
+                   🗑 Delete
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <ul class="list-group list-group-flush small">
+            {% for player in team.players.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <strong>{{ player.number }}</strong> - {{ player.name }}
+                <span class="badge bg-info text-dark">{{ player.player_type }}</span>
+              </span>
+              <span>
+                <a href="{% url 'edit_player' player.id %}" class="text-warning me-2">✏️</a>
+                <a href="{% url 'delete_player' player.id %}" class="text-danger"
+                   onclick="return confirm('Delete this player?');">🗑</a>
+              </span>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted fst-italic">No players yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mt-4">
+      🚫 No teams have been created yet. <a href="{% url 'home' %}">Create one now!</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Update Score - Live Cricket{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+
+      <!-- Score Update Card -->
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-success text-white text-center rounded-top-4">
+          <h4 class="mb-0">
+            🏏 {{ match.team1.name }} 
+            <span class="px-3 text-warning fw-bold">vs</span> 
+            {{ match.team2.name }}
+          </h4>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+              <!-- Team 1 -->
+              <div class="col-md-6 border-end">
+                <h5 class="text-center text-primary mb-3">{{ match.team1.name }}</h5>
+                {% for field in form %}
+                  {% if "team1" in field.name %}
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold">{{ field.label }}</label>
+                      {{ field }}
+                      {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <!-- Team 2 -->
+              <div class="col-md-6">
+                <h5 class="text-center text-danger mb-3">{{ match.team2.name }}</h5>
+                {% for field in form %}
+                  {% if "team2" in field.name %}
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold">{{ field.label }}</label>
+                      {{ field }}
+                      {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a href="{% url 'matches' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+              <button type="submit" class="btn btn-success px-4">💾 Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
